@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.interactions.commands.context.MessageContextInteracti
 import net.dv8tion.jda.api.interactions.commands.context.UserContextInteraction
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction
 import org.slf4j.Logger
+import java.lang.IllegalStateException
 
 /**
  * A [SlashCommandInteraction] with additional fields to interact with the Slash DSL.
@@ -32,7 +33,7 @@ class SlashContext<A : Arguments>(
     /**
      * The arguments that were provided by the user
      */
-    lateinit var args: A
+    val args: A = command.args() ?: throw IllegalStateException("Unable to load arguments")
 
     /**
      * Loads the context
@@ -63,7 +64,6 @@ class SlashContext<A : Arguments>(
     private fun loadArguments() {
         log.trace("Loading arguments")
         val args = command.args() ?: return
-        this.args = args
 
 
         val argParseErrors = mutableMapOf<String, String>()
